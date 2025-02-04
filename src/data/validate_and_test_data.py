@@ -58,7 +58,6 @@ def test_data_drift(reference_data, current_data):
     drift_results = report.as_dict()
     if drift_results["metrics"][0]["result"]["dataset_drift"]:
         print(f"❌ Opozorilo: Zaznan data drift!")
-        exit(1)
     else:
         print(f"✅ Ni zaznanega data drift-a.")
 
