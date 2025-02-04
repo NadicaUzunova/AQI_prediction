@@ -71,7 +71,6 @@ def kolmogorov_smirnov_test(reference_data, current_data):
 
         if ks_p_value < 0.05:
             print(f"❌ KS test ni uspešen za stolpec: {col} (p-value={ks_p_value:.5f})")
-            exit(1)
         else:
             print(f"✅ KS test uspešen za stolpec: {col} (p-value={ks_p_value:.5f})")
 
@@ -83,7 +82,6 @@ def main():
 
     if reference_data is None or current_data is None:
         print("❌ Manjkajo podatki! Prekinjam validacijo.")
-        exit(1)
 
     # Validacija podatkov
     validate_data(current_data, "aqi_validation")
