@@ -51,10 +51,10 @@ jobs:
       - name: ✅ Validiraj in testiraj podatke
         run: poetry run python validate_and_test_data.py
 
-      - name: 📌 Sledi spremembam DVC
+      - name: 📌 Sledi spremembam DVC v celotni `data/` mapi
         run: |
-          poetry run dvc add data/processed/*
+          poetry run dvc add data/
           poetry run dvc push
-          git add data/processed.dvc
+          git add data.dvc
           git commit -m "🚀 Avtomatska posodobitev podatkov [skip ci]" || echo "No changes to commit"
           git push origin main || echo "No changes to push"
