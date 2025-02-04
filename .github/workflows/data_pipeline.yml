@@ -2,8 +2,8 @@ name: Data Pipeline Automation
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # Zagon vsakih 30 minut
-  workflow_dispatch: # Ročni zagon
+    - cron: "*/30 * * * *"  # Zagon vsakih 30 minut
+  workflow_dispatch:  # Ročni zagon
 
 jobs:
   run_pipeline:
@@ -13,42 +13,48 @@ jobs:
       - name: 🚀 Checkout repo
         uses: actions/checkout@v4
 
+      - name: 🔧 Nastavi Python okolje in Poetry
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"  # Uporabi enako verzijo kot v `pyproject.toml`
+
+      - name: 📦 Namesti Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry --version
+
+      - name: 📦 Namesti odvisnosti s Poetry
+        run: |
+          poetry install --no-interaction --no-root
+
       - name: 🔑 Nastavi DVC & DagsHub
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          dvc remote modify origin auth basic
-          dvc remote modify origin user ${{ secrets.DAGSHUB_USER }}
-          dvc remote modify origin password ${{ secrets.DAGSHUB_TOKEN }}
-
-      - name: 🔧 Nastavi Python okolje
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-
-      - name: 📦 Namesti odvisnosti
-        run: |
-          pip install -r requirements.txt
+          poetry run dvc remote modify origin auth basic
+          poetry run dvc remote modify origin user ${{ secrets.DAGSHUB_USER }}
+          poetry run dvc remote modify origin password ${{ secrets.DAGSHUB_TOKEN }}
 
       - name: 📡 Zberi podatke
-        run: python fetch_data.py
+        run: poetry run python fetch_data.py
 
       - name: 🔗 Združi podatke
-        run: python merge_data.py
+        run: poetry run python merge_data.py
 
       - name: 🔄 Procesiraj podatke
-        run: python process_data.py
+        run: poetry run python process_data.py
 
       - name: ✂️ Razdeli podatke
-        run: python split_data.py
+        run: poetry run python split_data.py
 
       - name: ✅ Validiraj in testiraj podatke
-        run: python validate_and_test_data.py
+        run: poetry run python validate_and_test_data.py
 
       - name: 📌 Sledi spremembam DVC
         run: |
-          dvc add data/processed/*
-          dvc push
+          poetry run dvc add data/processed/*
+          poetry run dvc push
           git add data/processed.dvc
           git commit -m "🚀 Avtomatska posodobitev podatkov [skip ci]" || echo "No changes to commit"
           git push origin main || echo "No changes to push"
