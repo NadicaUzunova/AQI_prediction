@@ -16,7 +16,7 @@ jobs:
       - name: 🔧 Nastavi Python okolje in Poetry
         uses: actions/setup-python@v4
         with:
-          python-version: "3.11"  # Uporabi enako verzijo kot v `pyproject.toml`
+          python-version: "3.11"  # Enaka verzija kot v `pyproject.toml`
 
       - name: 📦 Namesti Poetry
         run: |
@@ -36,25 +36,31 @@ jobs:
           poetry run dvc remote modify origin user ${{ secrets.DAGSHUB_USER }}
           poetry run dvc remote modify origin password ${{ secrets.DAGSHUB_TOKEN }}
 
+      - name: 🔄 Pridobi podatke iz DVC
+        run: |
+          poetry run dvc pull
+          mkdir -p data/raw/aqi data/raw/weather data/processed/train data/processed/test reports
+
       - name: 📡 Zberi podatke
-        run: poetry run python src/data/fetch_data.py  # ✅ Popravljeno
+        run: poetry run python src/data/fetch_data.py
 
       - name: 🔗 Združi podatke
-        run: poetry run python src/data/merge_data.py  # ✅ Popravljeno
+        run: poetry run python src/data/merge_data.py
 
       - name: 🔄 Procesiraj podatke
-        run: poetry run python src/data/process_data.py  # ✅ Popravljeno
+        run: poetry run python src/data/process_data.py
 
       - name: ✂️ Razdeli podatke
-        run: poetry run python src/data/split_data.py  # ✅ Popravljeno
+        run: poetry run python src/data/split_data.py
 
       - name: ✅ Validiraj in testiraj podatke
-        run: poetry run python src/data/validate_and_test_data.py  # ✅ Popravljeno
+        run: poetry run python src/data/validate_and_test_data.py
 
-      - name: 📌 Sledi spremembam DVC v celotni `data/` mapi
+      - name: 📌 Posodobi spremembe v DVC
         run: |
-          poetry run dvc add data/
+          poetry run dvc add data/ reports/
+          poetry run dvc commit
           poetry run dvc push
-          git add data.dvc
-          git commit -m "🚀 Avtomatska posodobitev podatkov [skip ci]" || echo "No changes to commit"
+          git add data.dvc reports.dvc
+          git commit -m "🚀 Avtomatska posodobitev podatkov in poročil [skip ci]" || echo "No changes to commit"
           git push origin main || echo "No changes to push"
