@@ -37,19 +37,19 @@ jobs:
           poetry run dvc remote modify origin password ${{ secrets.DAGSHUB_TOKEN }}
 
       - name: 📡 Zberi podatke
-        run: poetry run python .src/data/fetch_data.py
+        run: poetry run python src/data/fetch_data.py
 
       - name: 🔗 Združi podatke
-        run: poetry run python .src/data/merge_data.py
+        run: poetry run python src/data/merge_data.py
 
       - name: 🔄 Procesiraj podatke
-        run: poetry run python .src/data/process_data.py
+        run: poetry run python src/data/process_data.py
 
       - name: ✂️ Razdeli podatke
-        run: poetry run python .src/data/split_data.py
+        run: poetry run python src/data/split_data.py
 
       - name: ✅ Validiraj in testiraj podatke
-        run: poetry run python .src/data/validate_and_test_data.py
+        run: poetry run python src/data/validate_and_test_data.py
 
       - name: 📌 Sledi spremembam DVC v celotni `data/` mapi
         run: |
