@@ -16,7 +16,7 @@ os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
 # Povezava z MongoDB
 client = MongoClient(os.getenv("MONGODB_URI"))
-db = client["aqi_predictions"]
+db = client["aqiPredictions"]
 collection = db["predictions"]
 
 # Fiksna pot do testnih podatkov

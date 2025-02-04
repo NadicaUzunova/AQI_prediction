@@ -1,0 +1,7 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/NadicaUzunova/AQI_prediction.dvc
+    auth = basic
+    user = NadicaUzunova
+    password = 01923d386e8a9ed601ac601e13cbe25f968b5ff0
