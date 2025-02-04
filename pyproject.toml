@@ -1,0 +1,28 @@
+[project]
+name = "aqi-prediction-be"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Nadica",email = "nadica.uzunova@student.um.si"}
+]
+readme = "README.md"
+requires-python = ">=3.11, <=3.12"
+dependencies = [
+    "requests (>=2.32.3,<3.0.0)",
+    "pandas (>=2.2.3,<3.0.0)",
+    "scikit-learn (>=1.6.1,<2.0.0)",
+    "numpy (>=2.2.2,<3.0.0)",
+    "streamlit (>=1.41.1,<2.0.0)",
+    "openmeteo-requests (>=1.3.0,<2.0.0)",
+    "requests-cache (>=1.2.1,<2.0.0)",
+    "retry-requests (>=2.0.0,<3.0.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [
+    { include = "src" }
+]
